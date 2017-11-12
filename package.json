@@ -1,0 +1,14 @@
+{
+  "name": "reflection",
+  "version": "1.0.0",
+  "description": "Reflection for Typescript",
+  "main": "dist/reflection.js",
+  "scripts": {},
+  "author": "appleskiller",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^3.1.0",
+    "webpack": "^3.8.1"
+  }
+}
