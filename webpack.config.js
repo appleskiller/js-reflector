@@ -1,17 +1,19 @@
+var webpack = require("webpack");
+
 module.exports = {
-	entry: './src/test.ts',
+	entry: './src/reflection.ts',
 	output: {
 	  filename: 'dist/reflection.js'
 	},
 	resolve: {
-	   extensions: ['.webpack.js', '.web.js', '.ts', '.js']
+	   extensions: ['.ts', '.tsx', '.js', '.jsx']
 	},
 	module: {
 	  loaders: [
 			{
 				test: /\.tsx?$/,
 				exclude: /node_modules/,
-				loader: 'ts-loader'
+				loader: 'awesome-typescript-loader'
 			}
 	  ]
 	},

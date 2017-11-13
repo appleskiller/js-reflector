@@ -3,12 +3,20 @@
   "version": "1.0.0",
   "description": "Reflection for Typescript",
   "main": "dist/reflection.js",
-  "scripts": {},
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -r ./node_modules/ts-node/register --watch-extensions ts,tsx test/**.spec.ts"
+  },
   "author": "appleskiller",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "ts-loader": "^3.1.0",
+    "awesome-typescript-loader": "^3.3.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-webpack": "^2.0.6",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
     "webpack": "^3.8.1"
   }
 }
