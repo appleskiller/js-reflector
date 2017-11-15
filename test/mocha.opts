@@ -1,0 +1,2 @@
+--reporter landing
+--require ./node_modules/ts-node/register
