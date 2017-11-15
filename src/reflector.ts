@@ -18,6 +18,7 @@ export interface IClass extends Function{
  * @interface IPropertySchema
  */
 export interface IPropertySchema {
+	[key: string]: any;
 	/**
 	 * 属性名
 	 * 
@@ -48,6 +49,7 @@ export interface IPropertySchema {
  * @interface IClassSchema
  */
 export interface IClassSchema {
+	[key: string]: any;
 	/**
 	 * 类名称
 	 * 
@@ -209,6 +211,7 @@ export interface IReflectorUtil {
 	describeProperty(obj: any, propertyName: string, value: any): IPropertySchema;
 }
 
+var name2Class: {[className: string]: Function | IClass} = {};
 
 // -----------------------------------------------------------
 // Utils
@@ -418,26 +421,25 @@ function getOrCreatePropertySchema(classObject: Function | IClass, propName: str
 }
 
 function getMetadataValue(hookArray: (value: any, classObject: Function | IClass, oriValue: any) => any[] , value: any, classObject: Function | IClass): any {
+	if (!hookArray || !hookArray.length) return value;
 	var oriValue = value;
-	if (hookArray) {
-		for (var i: number = 0; i < hookArray.length; i++) {
-			hookArray[i] && (value = hookArray[i](value , classObject , oriValue));
-		}
+	for (var i: number = 0; i < hookArray.length; i++) {
+		hookArray[i] && (value = hookArray[i](value , classObject , oriValue));
 	}
-	return oriValue;
+	return value;
 }
 function classDecorator(key: string, classObject: Function | IClass, value?: any): void {
 	var schema = getOrCreateClassSchema(classObject);
-	schema[key] = getMetadataValue(value, hooks.classHook[key], classObject);
+	schema[key] = getMetadataValue(hooks.classHook[key], value, classObject);
 }
 function staticPropertyDecorator(key: string, classObject: Function | IClass, memberName: string, isMethod: boolean, value?: any): void {
 	var schema = getOrCreatePropertySchema(classObject , memberName , isMethod, true);
-	schema[key] = getMetadataValue(value, hooks.staticPropertyHook[key], classObject);
+	schema[key] = getMetadataValue(hooks.staticPropertyHook[key], value, classObject);
 }
 function propertyDecorator(key: string, classProto: Object, memberName: string, isMethod: boolean, value?: any): void {
 	var classObject = classProto.constructor;
 	var schema = getOrCreatePropertySchema(classProto.constructor , memberName , isMethod, false);
-	schema[key] = getMetadataValue(value, hooks.propertyHook[key], classObject);
+	schema[key] = getMetadataValue(hooks.propertyHook[key], value, classObject);
 }
 export var metadata: IMetadataStatic = <IMetadataStatic>function (key: string, value?: any): Function {
 	function internalDecorator(target: Object, targetKey?: string, desc?: any): void {
@@ -467,8 +469,8 @@ mixin(metadata , {
 	},
 	superClass: function (value: string | Function | IClass): Function {
 		if (!value) throw ReferenceError();
-		var className = isClass(value) ? util.getClassName(<IClass>value) : value; 
-		return metadata("superClass" , className); 
+		var className = isClass(value) ? util.getClassName(<IClass>value) : value;
+		return metadata("superClass" , className);
 	},
 	// -----------------------------------------------------------
 	// Common Property Schema metadata
@@ -482,19 +484,22 @@ mixin(metadata , {
 // -----------------------------------------------------------
 // Internal Schema
 // ===========================================================
-getOrCreateClassSchema(Object).className = "object";
-getOrCreateClassSchema(Array).className = "array";
-getOrCreateClassSchema(Function).className = "function";
-getOrCreateClassSchema(Date).className = "date";
-getOrCreateClassSchema(Number).className = "number";
-getOrCreateClassSchema(String).className = "string";
-getOrCreateClassSchema(Boolean).className = "boolean";
+function registerPrimitiveType(className, classObject) {
+	name2Class[className] = classObject;
+	getOrCreateClassSchema(classObject).className = className;
+}
+registerPrimitiveType("Object", Object);
+registerPrimitiveType("Array", Array);
+registerPrimitiveType("Function", Function);
+registerPrimitiveType("Date", Date);
+registerPrimitiveType("Number", Number);
+registerPrimitiveType("String", String);
+registerPrimitiveType("Boolean", Boolean);
 
 // -----------------------------------------------------------
 // Util
 // ===========================================================
 // register className hook
-var name2Class: {[className: string]: Function | IClass} = {};
 registerMetadataHook(hookTypes.CLASS, "className", (value: any, classObject: Function, oriValue: any) => {
 	name2Class[value] = classObject;
 	return value;
