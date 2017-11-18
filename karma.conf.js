@@ -67,8 +67,8 @@ module.exports = function(config) {
     reporters: ['progress', 'saucelabs'],
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-    // browsers: ['sl_chrome'],
+    // browsers: ['Chrome'],
+    browsers: ['sl_chrome'],
     // web server port
     port: 9876,
 
