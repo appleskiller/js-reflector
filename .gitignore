@@ -47,7 +47,8 @@ Temporary Items
 .apdisk
 
 # 
-npm-debug.log
+*.log
 .vscode/
 dist/
 node_modules/
+karma.sauceLabs.json
