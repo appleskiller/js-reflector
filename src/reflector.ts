@@ -211,7 +211,6 @@ export interface IReflectorUtil {
 	describeProperty(obj: any, propertyName: string, value: any): IPropertySchema;
 }
 
-var name2Class: {[className: string]: Function | IClass} = {};
 
 // -----------------------------------------------------------
 // Utils
@@ -227,11 +226,57 @@ function isObject(x: any): boolean {
 }
 function mixin(target: any, source: any): void {
 	for (var key in source) { target[key] = source[key]; }
+	return target;
 }
 var count = 0;
 function uniqueId(prefex: string): string {
 	return prefex + "_" + (count++);
 }
+
+class _Map {
+	private _keys = [];
+	private _values = [];
+	private _cacheKey = {};
+	private _cacheIndex = -1;
+	private _find(key: any): number {
+		if (this._cacheKey === key) return this._cacheIndex;
+		var ind = this._keys.indexOf(key);
+		if (ind >= 0) {
+			this._cacheKey = key;
+			this._cacheIndex = ind;
+		}
+		return ind;
+	}
+	get(key: any): any {
+		var ind = this._find(key);
+		return ind >= 0 ? this._values[ind] : undefined;
+	}
+	set(key: any, value: any): _Map {
+		var ind = this._find(key);
+		if (ind >= 0) {
+			this._values[ind] = value;
+		} else {
+			this._keys.push(key);
+			this._values.push(value);
+		}
+		return this;
+	}
+	delete(key: any): boolean {
+		var ind = this._find(key);
+		if (ind >= 0) {
+			this._keys.splice(ind, 1);
+			this._values.splice(ind, 1);
+			this._cacheKey = {};
+			this._cacheIndex = -1;
+			return true;
+		}
+		return false;
+	}
+}
+var name2Class: {[className: string]: IClass} = {};
+var class2Schema: _Map = new _Map();
+var class2DeclaredSchema: _Map = new _Map();
+
 // -----------------------------------------------------------
 // Hooks
 // ===========================================================
@@ -389,25 +434,33 @@ function createObjectSchema(schema: IClassSchema): IObjectSchema {
 	return result;
 }
 function getOrCreateClassSchema(classObject: Function | IClass): IClassSchema {
-	if (!classObject["__classSchema__"]) classObject["__classSchema__"] = {
-		className: uniqueId('unnamed_class'),
-		superClass: "Object",
-		staticProperties: {},
-		properties: {}
-	};
-	return classObject["__classSchema__"];
+	var schema = class2Schema.get(classObject);
+	if (!schema) {
+		var className = uniqueId('unnamed_class');
+		schema = {
+			className: className,
+			superClass: "Object",
+			staticProperties: {},
+			properties: {}
+		};
+		name2Class[className] = <IClass>classObject;
+		class2Schema.set(classObject, schema);
+	}
+	return schema;
 }
 function getOrCreateDeclaredClassSchema(classObject: Function | IClass): IClassSchema {
-	if (!classObject["__declaredClassSchema__"]) {
+	var declaredSchema = class2DeclaredSchema.get(classObject);
+	if (!declaredSchema) {
 		var schema = getOrCreateClassSchema(classObject);
 		var superSchema = null;
 		var superClass = name2Class[schema.superClass];
 		if (superClass) {
 			superSchema = getOrCreateDeclaredClassSchema(superClass);
 		}
-		classObject["__declaredClassSchema__"] = mergeSchema(schema, superSchema);
-	};
-	return classObject["__declaredClassSchema__"];
+		declaredSchema = mergeSchema(schema, superSchema);
+		class2DeclaredSchema.set(classObject, declaredSchema);
+	}
+	return declaredSchema;
 }
 function getOrCreatePropertySchema(classObject: Function | IClass, propName: string, isMethod: boolean, isStatic: boolean): IPropertySchema {
 	var schema = getOrCreateClassSchema(classObject);
@@ -486,7 +539,9 @@ mixin(metadata , {
 // ===========================================================
 function registerPrimitiveType(className, classObject) {
 	name2Class[className] = classObject;
-	getOrCreateClassSchema(classObject).className = className;
+	var schema = getOrCreateClassSchema(classObject);
+	schema.className = className;
+	class2DeclaredSchema.set(classObject, mixin({}, schema));
 }
 registerPrimitiveType("Object", Object);
 registerPrimitiveType("Array", Array);
@@ -500,7 +555,7 @@ registerPrimitiveType("Boolean", Boolean);
 // Util
 // ===========================================================
 // register className hook
-registerMetadataHook(hookTypes.CLASS, "className", (value: any, classObject: Function, oriValue: any) => {
+registerMetadataHook(hookTypes.CLASS, "className", (value: any, classObject: IClass, oriValue: any) => {
 	name2Class[value] = classObject;
 	return value;
 })

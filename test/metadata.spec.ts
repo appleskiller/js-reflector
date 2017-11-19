@@ -5,20 +5,23 @@ var util = reflector.util;
 
 @metadata.className("metadata.spec.SampleClass")
 @metadata.superClass(Object)
-@metadata("customMetadata", "value")
+@metadata("meta", "value")
 class SampleClass {
 }
 
-class OtherClass {
-	@metadata("customMetadata", "value")
+class NoMetaClass {
+}
+@metadata.superClass(NoMetaClass)
+class OtherClass extends NoMetaClass {
+	@metadata("meta", "value")
 	static staticProperty;
 	
-	@metadata("customMetadata", "value")
+	@metadata("meta", "value")
 	static staticMethod() { }
-	@metadata("customMetadata", "value")
+	@metadata("meta", "value")
 	@metadata.type(SampleClass)
 	prop: SampleClass;
-	@metadata("customMetadata", "value")
+	@metadata("meta", "value")
 	method() { }
 }
 
@@ -28,17 +31,20 @@ describe("reflector.metadata - class", () => {
 			assert.strictEqual("metadata.spec.SampleClass", util.getClassName(SampleClass))
 		})
 	})
-	describe("#metadata.superClass(Object)", () => {
-		it("should superClass is Object", () => {
+	describe("#metadata.superClass()", () => {
+		it("should superClass of SampleClass is Object", () => {
 			assert.strictEqual(Object, util.getSuperClass(SampleClass))
 		})
-		it("should superClass name is 'Object'", () => {
+		it("should superClass name of SampleClass is 'Object'", () => {
 			assert.strictEqual("Object", util.getSuperClassName(SampleClass))
 		})
+		it("should superClass name of OtherClass is 'unnamed_class_x'", () => {
+			assert.strictEqual(0, util.getSuperClassName(OtherClass).indexOf("unnamed_class"))
+		})
 	})
-	describe("#metadata('customMetadata', 'value')", () => {
-		it("should customMetadata is value", () => {
-			assert.strictEqual("value", util.getClassSchema(SampleClass).customMetadata)
+	describe("#metadata('meta', 'value')", () => {
+		it("should meta is value", () => {
+			assert.strictEqual("value", util.getClassSchema(SampleClass).meta)
 		})
 	})
 })
