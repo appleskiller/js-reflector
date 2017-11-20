@@ -313,6 +313,7 @@ export function registerMetadataHook(type: string, key: string, hook: (value: an
 // ===========================================================
 // 排除不必merge到属性描述上的class描述
 var ignorePropertySchemaMergeKeys = {
+	type: true,
 	className: true,
 	superClass: true,
 	properties: true,
@@ -324,6 +325,13 @@ var ignoreObjectSchemaMergeKeys = {
 	superClass: true,
 	properties: true,
 	staticProperties: true,
+}
+function mergeClassSchemaToPropertySchema(schema: IPropertySchema, classSchema: IClassSchema): void {
+	if (!schema || !classSchema) return;
+	for (var key in classSchema) {
+		if (key in schema || ignorePropertySchemaMergeKeys[key]) { continue; }
+		else { schema[key] = classSchema[key] }
+	}
 }
 function mergePropertySchema(schema: IPropertySchema, superSchema: IPropertySchema): IPropertySchema {
 	var result = <IPropertySchema>{};
@@ -414,10 +422,7 @@ function createObjectPropertySchema(propName: string, value: any, propertySchema
 	// merge metadata by classObject
 	var classObject: IClass = value.constructor;
 	var classSchema = getOrCreateDeclaredClassSchema(classObject);
-	for (key in classSchema) {
-		if (key in result || ignorePropertySchemaMergeKeys[key]) { continue; }
-		else { result[key] = classSchema[key] }
-	}
+	mergeClassSchemaToPropertySchema(result, classSchema);
 	result.type = classSchema.className;
 	result.isStatic = isStatic;
 	return result;
@@ -449,7 +454,7 @@ function getOrCreateClassSchema(classObject: Function | IClass): IClassSchema {
 	return schema;
 }
 function getOrCreateDeclaredClassSchema(classObject: Function | IClass): IClassSchema {
-	var declaredSchema = class2DeclaredSchema.get(classObject);
+	var declaredSchema: IClassSchema = class2DeclaredSchema.get(classObject);
 	if (!declaredSchema) {
 		var schema = getOrCreateClassSchema(classObject);
 		var superSchema = null;
@@ -458,6 +463,25 @@ function getOrCreateDeclaredClassSchema(classObject: Function | IClass): IClassS
 			superSchema = getOrCreateDeclaredClassSchema(superClass);
 		}
 		declaredSchema = mergeSchema(schema, superSchema);
+		var key, type, typeSchema: IClassSchema;
+		// static properties
+		var staticProperties = declaredSchema.staticProperties;
+		for (key in staticProperties) {
+			type = staticProperties[key].type;
+			if (type && name2Class[type]) {
+				typeSchema = getOrCreateDeclaredClassSchema(name2Class[type]);
+				mergeClassSchemaToPropertySchema(staticProperties[key], typeSchema);
+			}
+		}
+		// properties
+		var properties = declaredSchema.properties;
+		for (key in properties) {
+			type = properties[key].type;
+			if (type && name2Class[type]) {
+				typeSchema = getOrCreateDeclaredClassSchema(name2Class[type]);
+				mergeClassSchemaToPropertySchema(properties[key], typeSchema);
+			}
+		}
 		class2DeclaredSchema.set(classObject, declaredSchema);
 	}
 	return declaredSchema;

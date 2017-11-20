@@ -11,7 +11,7 @@ $ npm test
 
 ### Using karma-sauceLabs-launcher
 For run the tests across many browsers and platforms on Sauce Labs, you must make file 'karma.sauceLabs.json' in the project:
-```
+```json
 {
 	"testName": "your test name",
 	"username": "your SauceLabs username",
