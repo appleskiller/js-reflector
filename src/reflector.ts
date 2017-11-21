@@ -103,7 +103,7 @@ export interface IHookTypes {
 	PROPERTY: string;
 }
 /**
- * 为类和类成员添加额外的元信息。使用@metadata(key, value)注册自定义元信息或使用内建字段赋值，例如@metadata.className("ClassA")即为class命名为ClassA.
+ * 为类和类成员添加额外的元信息。使用@metadata(key, value)注册自定义元信息或使用metadata内建字段赋值，例如@metadata.className("ClassA")即为class命名为ClassA.
  * 
  * @export
  * @interface IMetadataStatic
@@ -273,6 +273,8 @@ class _Map {
 		return false;
 	}
 }
+const NULLTYPE = "Null";
+const UNDEFINEDTYPE = "Undefined";
 var name2Class: {[className: string]: IClass} = {};
 var class2Schema: _Map = new _Map();
 var class2DeclaredSchema: _Map = new _Map();
@@ -326,6 +328,13 @@ var ignoreObjectSchemaMergeKeys = {
 	properties: true,
 	staticProperties: true,
 }
+/**
+ * 将类信息合入属性描述
+ * 
+ * @param {IPropertySchema} schema 
+ * @param {IClassSchema} classSchema 
+ * @returns {void} 
+ */
 function mergeClassSchemaToPropertySchema(schema: IPropertySchema, classSchema: IClassSchema): void {
 	if (!schema || !classSchema) return;
 	for (var key in classSchema) {
@@ -333,6 +342,13 @@ function mergeClassSchemaToPropertySchema(schema: IPropertySchema, classSchema: 
 		else { schema[key] = classSchema[key] }
 	}
 }
+/**
+ * 合并属性描述
+ * 
+ * @param {IPropertySchema} schema 
+ * @param {IPropertySchema} superSchema 
+ * @returns {IPropertySchema} 
+ */
 function mergePropertySchema(schema: IPropertySchema, superSchema: IPropertySchema): IPropertySchema {
 	var result = <IPropertySchema>{};
 	var key;
@@ -360,6 +376,13 @@ function mergeClassSchemaProperties(properties: { [key: string]: IPropertySchema
 	}
 	return result;
 }
+/**
+ * 合并类描述信息
+ * 
+ * @param {IClassSchema} schema 
+ * @param {IClassSchema} superSchema 
+ * @returns {IClassSchema} 
+ */
 function mergeSchema(schema: IClassSchema, superSchema: IClassSchema): IClassSchema {
 	var result = <IClassSchema>{};
 	var key;
@@ -374,30 +397,54 @@ function mergeSchema(schema: IClassSchema, superSchema: IClassSchema): IClassSch
 	}
 	return result;
 }
+/**
+ * 创建null描述
+ * 
+ * @param {string} propName 
+ * @param {IPropertySchema} propertySchema 
+ * @param {boolean} isStatic 
+ * @returns {IPropertySchema} 
+ */
 function createNullValueSchema(propName: string, propertySchema: IPropertySchema, isStatic: boolean): IPropertySchema {
-	if (!propertySchema) return {name: propName, type: "null", isMethod: false, isStatic: isStatic};
+	if (!propertySchema) return {name: propName, type: NULLTYPE, isMethod: false, isStatic: isStatic};
 	var result = <IPropertySchema>{};
 	// merge schema
 	for (var key in propertySchema) { result[key] = propertySchema[key]; }
-	result.type = propertySchema.type || "null";
+	result.type = propertySchema.type || NULLTYPE;
 	result.isStatic = isStatic;
 	return result;
 }
+/**
+ * 创建undefined描述
+ * 
+ * @param {string} propName 
+ * @param {IPropertySchema} propertySchema 
+ * @param {boolean} isStatic 
+ * @returns {IPropertySchema} 
+ */
 function createUndefinedValueSchema(propName: string, propertySchema: IPropertySchema, isStatic: boolean): IPropertySchema {
-	if (!propertySchema) return {name: propName, type: "undefined", isMethod: false, isStatic: isStatic};
+	if (!propertySchema) return {name: propName, type: UNDEFINEDTYPE, isMethod: false, isStatic: isStatic};
 	var result = <IPropertySchema>{};
 	// merge schema
 	for (var key in propertySchema) { result[key] = propertySchema[key]; }
-	result.type = propertySchema.type || "undefined";
+	result.type = propertySchema.type || UNDEFINEDTYPE;
 	result.isStatic = isStatic;
 	return result;
 }
+/**
+ * 创建函数描述
+ * 
+ * @param {string} propName 
+ * @param {IPropertySchema} propertySchema 
+ * @param {boolean} isStatic 
+ * @returns {IPropertySchema} 
+ */
 function createFunctionValueSchema(propName: string, propertySchema: IPropertySchema, isStatic: boolean): IPropertySchema {
-	if (!propertySchema) return {name: propName, type: "function", isMethod: false, isStatic: isStatic};
+	if (!propertySchema) return {name: propName, type: "Function", isMethod: false, isStatic: isStatic};
 	var result = <IPropertySchema>{};
 	// merge schema
 	for (var key in propertySchema) { result[key] = propertySchema[key]; }
-	result.type = propertySchema.type || "function";
+	result.type = propertySchema.type || "Function";
 	result.isStatic = isStatic;
 	return result;
 }
@@ -427,6 +474,12 @@ function createObjectPropertySchema(propName: string, value: any, propertySchema
 	result.isStatic = isStatic;
 	return result;
 }
+/**
+ * 创建对象类型描述
+ * 
+ * @param {IClassSchema} schema 
+ * @returns {IObjectSchema} 
+ */
 function createObjectSchema(schema: IClassSchema): IObjectSchema {
 	var result = <IObjectSchema>{
 		type: schema.className,
@@ -438,6 +491,12 @@ function createObjectSchema(schema: IClassSchema): IObjectSchema {
 	}
 	return result;
 }
+/**
+ * 获取或创建类描述
+ * 
+ * @param {(Function | IClass)} classObject 
+ * @returns {IClassSchema} 
+ */
 function getOrCreateClassSchema(classObject: Function | IClass): IClassSchema {
 	var schema = class2Schema.get(classObject);
 	if (!schema) {
@@ -453,6 +512,12 @@ function getOrCreateClassSchema(classObject: Function | IClass): IClassSchema {
 	}
 	return schema;
 }
+/**
+ * 获取或创建全部可枚举成员的类描述
+ * 
+ * @param {(Function | IClass)} classObject 
+ * @returns {IClassSchema} 
+ */
 function getOrCreateDeclaredClassSchema(classObject: Function | IClass): IClassSchema {
 	var declaredSchema: IClassSchema = class2DeclaredSchema.get(classObject);
 	if (!declaredSchema) {
@@ -486,6 +551,15 @@ function getOrCreateDeclaredClassSchema(classObject: Function | IClass): IClassS
 	}
 	return declaredSchema;
 }
+/**
+ * 获取或创建属性描述
+ * 
+ * @param {(Function | IClass)} classObject 
+ * @param {string} propName 
+ * @param {boolean} isMethod 
+ * @param {boolean} isStatic 
+ * @returns {IPropertySchema} 
+ */
 function getOrCreatePropertySchema(classObject: Function | IClass, propName: string, isMethod: boolean, isStatic: boolean): IPropertySchema {
 	var schema = getOrCreateClassSchema(classObject);
 	var properties = isStatic ? schema.staticProperties : schema.properties;
@@ -496,7 +570,14 @@ function getOrCreatePropertySchema(classObject: Function | IClass, propName: str
 	}
 	return properties[propName];
 }
-
+/**
+ * 获得制定对象的描述值。取值时依次调用钩子函数。
+ * 
+ * @param {((value: any, classObject: Function | IClass, oriValue: any) => any[])} hookArray 
+ * @param {*} value 
+ * @param {(Function | IClass)} classObject 
+ * @returns {*} 
+ */
 function getMetadataValue(hookArray: (value: any, classObject: Function | IClass, oriValue: any) => any[] , value: any, classObject: Function | IClass): any {
 	if (!hookArray || !hookArray.length) return value;
 	var oriValue = value;
@@ -505,14 +586,39 @@ function getMetadataValue(hookArray: (value: any, classObject: Function | IClass
 	}
 	return value;
 }
+/**
+ * 类装饰器
+ * 
+ * @param {string} key 
+ * @param {(Function | IClass)} classObject 
+ * @param {*} [value] 
+ */
 function classDecorator(key: string, classObject: Function | IClass, value?: any): void {
 	var schema = getOrCreateClassSchema(classObject);
 	schema[key] = getMetadataValue(hooks.classHook[key], value, classObject);
 }
+/**
+ * 静态属性装饰器
+ * 
+ * @param {string} key 
+ * @param {(Function | IClass)} classObject 
+ * @param {string} memberName 
+ * @param {boolean} isMethod 
+ * @param {*} [value] 
+ */
 function staticPropertyDecorator(key: string, classObject: Function | IClass, memberName: string, isMethod: boolean, value?: any): void {
 	var schema = getOrCreatePropertySchema(classObject , memberName , isMethod, true);
 	schema[key] = getMetadataValue(hooks.staticPropertyHook[key], value, classObject);
 }
+/**
+ * 属性装饰器
+ * 
+ * @param {string} key 
+ * @param {Object} classProto 
+ * @param {string} memberName 
+ * @param {boolean} isMethod 
+ * @param {*} [value] 
+ */
 function propertyDecorator(key: string, classProto: Object, memberName: string, isMethod: boolean, value?: any): void {
 	var classObject = classProto.constructor;
 	var schema = getOrCreatePropertySchema(classProto.constructor , memberName , isMethod, false);
@@ -625,8 +731,8 @@ export var util: IReflectorUtil = {
 		return declared ? getOrCreateDeclaredClassSchema(classObject) : getOrCreateClassSchema(classObject);
 	},
 	describe: function(obj: any, allMembers?: boolean): IObjectSchema {
-		if (obj === null) return {type: "null", properties: {}};
-		if (obj === undefined) return {type: "undefined", properties: {}};
+		if (obj === null) return {type: NULLTYPE, properties: {}};
+		if (obj === undefined) return {type: UNDEFINEDTYPE, properties: {}};
 		var isClassObject = isClass(obj);
 		var classObject: IClass = isClassObject ? obj : obj.constructor;
 		var classSchema = util.getClassSchema(classObject, true);
