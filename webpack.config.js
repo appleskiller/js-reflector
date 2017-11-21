@@ -1,9 +1,9 @@
 var webpack = require("webpack");
 
 module.exports = {
-	entry: './src/reflection.ts',
+	entry: './src/reflector.ts',
 	output: {
-	  filename: 'dist/reflection.js'
+	  filename: 'dist/reflector.js'
 	},
 	resolve: {
 	   extensions: ['.ts', '.tsx', '.js', '.jsx']

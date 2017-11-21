@@ -1,8 +1,11 @@
 # reflector
 Reflector for Typescript
 
-
-## Testing
+## Build
+```
+$ webpack
+```
+## Test
 
 ### Using Mocha
 ```

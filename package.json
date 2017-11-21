@@ -1,8 +1,8 @@
 {
-  "name": "reflection",
+  "name": "reflector",
   "version": "1.0.0",
-  "description": "Reflection for Typescript",
-  "main": "dist/reflection.js",
+  "description": "reflector for Typescript",
+  "main": "dist/reflector.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --require ./node_modules/ts-node/register test/**.spec.ts",
     "debug": "./node_modules/.bin/mocha --require ./node_modules/ts-node/register test/**.spec.ts --debug-brk"
