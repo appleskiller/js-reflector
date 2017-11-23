@@ -188,7 +188,7 @@ var dynamicObject = {
     functionValue: function () { },
     sampleValue: new SampleClass()
 }
-console.log(util.describe(dynamicObject, true););
+console.log(util.describe(dynamicObject, true));
 // {
 //     "type": "Object",
 //     "properties": {
