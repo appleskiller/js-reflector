@@ -50,5 +50,6 @@ Temporary Items
 *.log
 .vscode/
 dist/
+coverage/
 node_modules/
 karma.sauceLabs.json
