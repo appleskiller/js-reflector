@@ -3,91 +3,77 @@
 
 var karma_sauceLabs = require("./karma.sauceLabs.json");
 
-module.exports = function(config) {
-  config.set({
+module.exports = function (config) {
+    config.set({
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+        // base path that will be used to resolve all patterns (eg. files, exclude)
+        basePath: '',
 
+        // frameworks to use
+        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+        frameworks: ['mocha', 'karma-typescript'],
 
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha'],
+        client: {
+            mocha: {
+                opts: "test/mocha.opts"
+            }
+        },
 
-    client: {
-      mocha: {
-        opts: "test/mocha.opts"
-      }
-    },
-
-    // list of files / patterns to load in the browser
-    files: [
-      'test/index.js',
-    ],
-
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      'test/index.js': ["webpack"],
-      'test/**/*.ts': ["webpack"]
-    },
-    webpack: {
-      resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx']
-      },
-      devtool: "inline-source-map",
-      module: {
-        loaders: [
-          {
-            test: /\.tsx?$/,
-            exclude: /node_modules/,
-            loader: 'awesome-typescript-loader'
-          }
+        // list of files / patterns to load in the browser
+        files: [
+            'src/**/*.ts',
+            'test/**/*.ts'
         ],
-      },
-    },
-    // from file karma.sauceLabs.json
-    sauceLabs: karma_sauceLabs,
-    customLaunchers: {
-      sl_chrome: {
-        base: 'SauceLabs',
-        browserName: 'chrome',
-        platform: 'Windows 7',
-        version: '35'
-      },
-    },
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'saucelabs'],
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-    // browsers: ['sl_chrome'],
-    // web server port
-    port: 9876,
 
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
 
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+        // list of files to exclude
+        exclude: [
+        ],
 
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+            'src/**/*.ts': ["karma-typescript"],
+            'test/**/*.ts': ["karma-typescript"]
+        },
+        // from file karma.sauceLabs.json
+        sauceLabs: karma_sauceLabs,
+        customLaunchers: {
+            sl_chrome: {
+                base: 'SauceLabs',
+                browserName: 'chrome',
+                platform: 'Windows 7',
+                version: '35'
+            },
+        },
+        // test results reporter to use
+        // possible values: 'dots', 'progress'
+        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+        reporters: ['progress', 'karma-typescript', 'saucelabs'],
+        // start these browsers
+        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+        browsers: ['Chrome'],
+        // browsers: ['sl_chrome'],
 
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+        // web server port
+        port: 9876,
 
-    // Concurrency level
-    // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
+        // enable / disable colors in the output (reporters and logs)
+        colors: true,
+
+        // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+        logLevel: config.LOG_INFO,
+
+        // enable / disable watching file and executing tests whenever any file changes
+        autoWatch: true,
+
+        // Continuous Integration mode
+        // if true, Karma captures browsers, runs the tests and exits
+        singleRun: false,
+
+        // Concurrency level
+        // how many browser should be started simultaneous
+        concurrency: Infinity
+    })
 }

@@ -299,6 +299,8 @@ function createNullValueSchema(propName, propertySchema, isStatic) {
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
+    result.name = propName;
+    result.isMethod = !!(propertySchema && propertySchema.isMethod);
     result.type = propertySchema.type || NULLTYPE;
     result.isStatic = isStatic;
     return result;
@@ -319,6 +321,8 @@ function createUndefinedValueSchema(propName, propertySchema, isStatic) {
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
+    result.name = propName;
+    result.isMethod = !!(propertySchema && propertySchema.isMethod);
     result.type = propertySchema.type || UNDEFINEDTYPE;
     result.isStatic = isStatic;
     return result;
@@ -339,6 +343,8 @@ function createFunctionValueSchema(propName, propertySchema, isStatic) {
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
+    result.name = propName;
+    result.isMethod = !!(propertySchema && propertySchema.isMethod);
     result.type = propertySchema.type || "Function";
     result.isStatic = isStatic;
     return result;
@@ -369,6 +375,8 @@ function createObjectPropertySchema(propName, value, propertySchema, isStatic) {
     var classObject = value.constructor;
     var classSchema = getOrCreateDeclaredClassSchema(classObject);
     mergeClassSchemaToPropertySchema(result, classSchema);
+    result.name = propName;
+    result.isMethod = !!(propertySchema && propertySchema.isMethod);
     result.type = classSchema.className;
     result.isStatic = isStatic;
     return result;
