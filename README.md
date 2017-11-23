@@ -170,6 +170,11 @@ console.log(util.getClassSchema(Child, true).properties['prop']..will_be_overwri
 
 ### Dynamic object reflection
 ```javascript
+@metadata("sampleMeta", "value")
+@metadata.className("descripbe.SampleClass")
+class SampleClass {
+    
+}
 var dynamicObject = {
     stringValue: "text",
     numberValue: 1,
