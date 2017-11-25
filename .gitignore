@@ -49,7 +49,7 @@ Temporary Items
 # 
 *.log
 .vscode/
-dist/
+meaningless_output/
 coverage/
 node_modules/
 karma.sauceLabs.json

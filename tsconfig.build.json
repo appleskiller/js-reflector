@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "lib",
+        "experimentalDecorators": true,
+        "declaration": true,
+        "alwaysStrict": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "removeComments": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "compileOnSave": false
+}

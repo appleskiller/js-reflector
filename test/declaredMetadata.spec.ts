@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import * as reflector from "../src/reflector";
+import * as reflector from "../src/index";
 var metadata = reflector.metadata;
 var util = reflector.util;
 

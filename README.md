@@ -265,7 +265,7 @@ console.log(util.describe(dynamicObject, true));
 
 # Build
 ```
-$ webpack
+$ npm build
 ```
 # Test
 
