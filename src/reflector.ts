@@ -228,6 +228,9 @@ function mixin(target: any, source: any): void {
     for (var key in source) { target[key] = source[key]; }
     return target;
 }
+function isMethodDesc(desc: any): boolean {
+    return !!desc && typeof desc.get !== "function" && typeof desc.set !== "function"
+}
 var count = 0;
 function uniqueId(prefex: string): string {
     return prefex + "_" + (count++);
@@ -639,11 +642,11 @@ export var metadata: IMetadataStatic = <IMetadataStatic>function (key: string, v
                 classDecorator(key, <Function>target, value);
             } else {
                 // 如果desc === undefined则认为是一个静态成员属性，否则为成员方法
-                staticPropertyDecorator(key, <Function>target, targetKey, (desc !== undefined), value);
+                staticPropertyDecorator(key, <Function>target, targetKey, isMethodDesc(desc), value);
             }
         } else if (isDefined(targetKey) && isObject(target)){
             // 如果desc === undefined则认为是一个成员属性，否则为成员方法
-            propertyDecorator(key, target, targetKey, (desc !== undefined), value);
+            propertyDecorator(key, target, targetKey, isMethodDesc(desc), value);
         } else {
             throw new TypeError();
         }

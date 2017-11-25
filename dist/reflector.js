@@ -88,6 +88,9 @@ function mixin(target, source) {
     }
     return target;
 }
+function isMethodDesc(desc) {
+    return !!desc && typeof desc.get !== "function" && typeof desc.set !== "function";
+}
 var count = 0;
 function uniqueId(prefex) {
     return prefex + "_" + (count++);
@@ -543,12 +546,12 @@ exports.metadata = function (key, value) {
             }
             else {
                 // 如果desc === undefined则认为是一个静态成员属性，否则为成员方法
-                staticPropertyDecorator(key, target, targetKey, (desc !== undefined), value);
+                staticPropertyDecorator(key, target, targetKey, isMethodDesc(desc), value);
             }
         }
         else if (isDefined(targetKey) && isObject(target)) {
             // 如果desc === undefined则认为是一个成员属性，否则为成员方法
-            propertyDecorator(key, target, targetKey, (desc !== undefined), value);
+            propertyDecorator(key, target, targetKey, isMethodDesc(desc), value);
         }
         else {
             throw new TypeError();

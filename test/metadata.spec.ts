@@ -24,11 +24,20 @@ class OtherClass extends NoMetaClass {
     
     @metadata("meta", "value")
     static staticMethod() { }
+
     @metadata("meta", "value")
     @metadata.type(SampleClass)
     prop: SampleClass;
+
     @metadata("meta", "value")
     method() { }
+
+    @metadata("meta" , "value")
+    get accessor() {
+        return null;
+    }
+    set accessor(v) {
+    }
 }
 
 describe("reflector.metadata - class", () => {
@@ -103,6 +112,16 @@ describe("reflector.metadata - member", () => {
             assert.strictEqual(undefined, schema.properties["method"].type);
             assert.strictEqual(false, schema.properties["method"].isStatic);
             assert.strictEqual(true, schema.properties["method"].isMethod);
+        })
+    })
+    describe("#OtherClass.accessor", () => {
+        it("should accessor is property", () => {
+            var schema = util.getClassSchema(OtherClass);
+            assert.strictEqual(true, !!schema.properties["accessor"]);
+            assert.strictEqual("accessor", schema.properties["accessor"].name);
+            assert.strictEqual(undefined, schema.properties["accessor"].type);
+            assert.strictEqual(false, schema.properties["accessor"].isStatic);
+            assert.strictEqual(false, schema.properties["accessor"].isMethod);
         })
     })
 })
