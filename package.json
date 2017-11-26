@@ -1,6 +1,6 @@
 {
   "name": "reflector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "reflector for Typescript",
   "main": "dist/reflector.common.js",
   "typings": "lib/index.d.ts",
@@ -13,7 +13,7 @@
     "build:ts": "tsc -p ./tsconfig.build.json",
     "build:main": "node build/build.js",
     "test": "karma start",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w",
     "release": "bash build/release.sh"
   },
   "author": "appleskiller", 
