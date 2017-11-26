@@ -1,12 +1,15 @@
 /**
-  * reflector v1.0.0
+  * js-reflector v1.0.1
   * (c) 2017-2017 Appleskiller
   * @license MIT
   */
-'use strict';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global['js-reflector'] = {})));
+}(this, (function (exports) { 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
+Object.defineProperty(exports, "__esModule", { value: true });
 function isDefined(value) {
     return value !== null && value !== undefined;
 }
@@ -463,3 +466,7 @@ exports.util = {
         return createObjectPropertySchema(propertyName, value, propertiesSchema[propertyName], isClassObject);
     }
 };
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));

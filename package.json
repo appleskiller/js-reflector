@@ -1,12 +1,17 @@
 {
-  "name": "reflector",
+  "name": "js-reflector",
   "version": "1.0.1",
-  "description": "reflector for Typescript",
-  "main": "dist/reflector.common.js",
+  "description": "js-reflector for Typescript",
+  "main": "dist/js-reflector.common.js",
   "typings": "lib/index.d.ts",
   "files": [
     "dist",
     "lib"
+  ],
+  "keywords": [
+      "typescript",
+      "javascript",
+      "reflection"
   ],
   "scripts": {
     "build": "npm run build:ts && npm run build:main",
@@ -15,6 +20,10 @@
     "test": "karma start",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "release": "bash build/release.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appleskiller/js-reflector.git"
   },
   "author": "appleskiller", 
   "license": "MIT",
