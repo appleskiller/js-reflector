@@ -1,5 +1,5 @@
-# Reflector
-Reflector for Typescript
+# js-reflector
+js-reflector for Typescript
 
 > An engineer built an airplane, and he recorded its structure.
 >
@@ -15,7 +15,7 @@ Reflector for Typescript
 
 ### Give a definite name to the class
 ```javascript
-import { metadata, util } from "reflector";
+import { metadata, util } from "js-reflector";
 
 @metadata.className("namespace.BaseClass")
 class BaseClass {
@@ -45,7 +45,7 @@ console.log(util.getSuperClassName(SampleClass));
 
 ### Add more metadata
 ```javascript
-import { metadata, util } from "reflector";
+import { metadata, util } from "js-reflector";
 
 @metadata('description', 'This is a SampleClass')
 class SampleClass {
@@ -58,7 +58,7 @@ console.log(util.getClassSchema(SampleClass).description);
 
 ### Class metadata schema
 ```javascript
-import { metadata, util } from "reflector";
+import { metadata, util } from "js-reflector";
 
 @metadata.className("namespace.BaseClass")
 class BaseClass {
