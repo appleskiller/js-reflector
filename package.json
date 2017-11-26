@@ -13,7 +13,7 @@
     "build:ts": "tsc -p ./tsconfig.build.json",
     "build:main": "node build/build.js",
     "test": "karma start",
-    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "release": "bash build/release.sh"
   },
   "author": "appleskiller", 
