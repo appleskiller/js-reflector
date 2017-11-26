@@ -1,6 +1,6 @@
 {
   "name": "js-reflector",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "js-reflector for Typescript",
   "main": "dist/js-reflector.common.js",
   "typings": "lib/index.d.ts",
@@ -18,8 +18,9 @@
     "build:ts": "tsc -p ./tsconfig.build.json",
     "build:main": "node build/build.js",
     "test": "karma start",
+    "test:release": "karma start --single-run true",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "release": "bash build/release.sh"
+    "release": "npm run test:release && npm run changelog && bash build/release.sh"
   },
   "repository": {
     "type": "git",

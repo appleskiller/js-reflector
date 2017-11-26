@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "--- Ready for release ---"
+echo ""
 set -e
 read -p "Enter release version: " VERSION
 
@@ -7,8 +9,7 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo "Releasing $VERSION ..."
-    npm test
-    VERSION=$VERSION npm run build
+    VERSION=$VERSION
 
     # commit
     git add -A
