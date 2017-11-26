@@ -16,7 +16,7 @@
     "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
     "release": "bash build/release.sh"
   },
-  "author": "appleskiller",
+  "author": "appleskiller", 
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
