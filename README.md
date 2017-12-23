@@ -24,7 +24,7 @@ class BaseClass {
 
 @metadata.className("namespace.SampleClass")
 @metadata.superClass(BaseClass)
-class SampleClass {
+class SampleClass extends BaseClass {
     constructor(id: string) {
         this.id = id;
     }
@@ -164,7 +164,7 @@ console.log(util.getClassSchema(Child, true).will_be_overwritten);
 // ChildValue
 console.log(util.getClassSchema(Child, true).properties['prop'].will_be_inherited);
 // value
-console.log(util.getClassSchema(Child, true).properties['prop']..will_be_overwritten);
+console.log(util.getClassSchema(Child, true).properties['prop'].will_be_overwritten);
 // ChildValue
 ```
 
