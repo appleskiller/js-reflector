@@ -719,7 +719,7 @@ export var util: IReflectorUtil = {
     getSuperClassName: function (classObject: Function | IClass): string {
         return util.getClassSchema(classObject).superClass;
     },
-    newInstance: function (className: string | IClass, ...args): any {
+    newInstance: function (className: string | Function | IClass, ...args): any {
         var classObject = isClass(className) ? <IClass>className : util.getClassByName(<string>className);
         if (isClass(classObject)) {
             switch (args.length) {

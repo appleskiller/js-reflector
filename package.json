@@ -1,6 +1,6 @@
 {
   "name": "js-reflector",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "js-reflector for Typescript",
   "main": "dist/js-reflector.common.js",
   "typings": "lib/index.d.ts",
