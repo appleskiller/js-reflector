@@ -42,7 +42,7 @@ export interface IReflectorUtil {
     getClassByName(className: string): IClass;
     getSuperClass(classObject: Function | IClass): IClass;
     getSuperClassName(classObject: Function | IClass): string;
-    newInstance(className: string, ...args: any[]): any;
+    newInstance(className: string | IClass, ...args: any[]): any;
     getClassSchema(classObject: Function | IClass, declared?: boolean): IClassSchema;
     describe(obj: any, allMembers?: boolean): IObjectSchema;
     describeProperty(obj: any, propertyName: string, value: any): IPropertySchema;

@@ -1,6 +1,6 @@
 /**
-  * js-reflector v1.0.1
-  * (c) 2017-2017 Appleskiller
+  * js-reflector v1.1.2
+  * (c) 2017-2018 Appleskiller
   * @license MIT
   */
 (function (global, factory) {
@@ -414,7 +414,7 @@ exports.util = {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        var classObject = exports.util.getClassByName(className);
+        var classObject = isClass(className) ? className : exports.util.getClassByName(className);
         if (isClass(classObject)) {
             switch (args.length) {
                 case 0: return new classObject();
