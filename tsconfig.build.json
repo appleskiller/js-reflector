@@ -4,6 +4,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "lib",
+        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "declaration": true,
         "alwaysStrict": true,

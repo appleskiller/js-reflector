@@ -84,13 +84,10 @@ console.log(util.getClassSchema(SampleClass));
 //     staticProperties: {
 //         staticSampleProperty: {
 //             name: "staticSampleProperty",
-//             isStatic: true,
-//             isMethod: false,
 //             meta: "value"
 //         },
 //         staticSampleMethod: {
 //             name: "staticSampleMethod",
-//             isStatic: true,
 //             isMethod: true,
 //             meta: "value"
 //         }
@@ -98,13 +95,10 @@ console.log(util.getClassSchema(SampleClass));
 //     properties: {
 //         sampleProperty: {
 //             name: "sampleProperty",
-//             isStatic: false,
-//             isMethod: false,
 //             meta: "value"
 //         },
 //         sampleMethod: {
 //             name: "sampleMethod",
-//             isStatic: false,
 //             isMethod: true,
 //             meta: "value"
 //         }
@@ -194,70 +188,48 @@ console.log(util.describe(dynamicObject, true));
 //     "properties": {
 //         "stringValue": {
 //             "name": "stringValue",
-//             "isMethod": false,
-//             "type": "String",
-//             "isStatic": false
+//             "type": "String"
 //         },
 //         "numberValue": {
 //             "name": "numberValue",
-//             "isMethod": false,
-//             "type": "Number",
-//             "isStatic": false
+//             "type": "Number"
 //         },
 //         "booleanValue": {
 //             "name": "booleanValue",
-//             "isMethod": false,
-//             "type": "Boolean",
-//             "isStatic": false
+//             "type": "Boolean"
 //         },
 //         "dateValue": {
 //             "name": "dateValue",
-//             "isMethod": false,
-//             "type": "Date",
-//             "isStatic": false
+//             "type": "Date"
 //         },
 //         "undefinedValue": {
 //             "name": "undefinedValue",
-//             "type": "Undefined",
-//             "isMethod": false,
-//             "isStatic": false
+//             "type": "Undefined"
 //         },
 //         "nullValue": {
 //             "name": "nullValue",
-//             "type": "Null",
-//             "isMethod": false,
-//             "isStatic": false
+//             "type": "Null"
 //         },
 //         "NaNValue": {
 //             "name": "NaNValue",
-//             "isMethod": false,
-//             "type": "Number",
-//             "isStatic": false
+//             "type": "Number"
 //         },
 //         "arrayValue": {
 //             "name": "arrayValue",
-//             "isMethod": false,
-//             "type": "Array",
-//             "isStatic": false
+//             "type": "Array"
 //         },
 //         "objectValue": {
 //             "name": "objectValue",
-//             "isMethod": false,
-//             "type": "Object",
-//             "isStatic": false
+//             "type": "Object"
 //         },
 //         "functionValue": {
 //             "name": "functionValue",
-//             "type": "Function",
-//             "isMethod": false,
-//             "isStatic": false
+//             "type": "Function"
 //         },
 //         "sampleValue": {
 //             "sampleMeta": "value",
 //             "name": "sampleValue",
-//             "isMethod": false,
-//             "type": "descripbe.SampleClass",
-//             "isStatic": false
+//             "type": "descripbe.SampleClass"
 //         }
 //     }
 // }

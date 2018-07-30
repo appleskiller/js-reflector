@@ -3,6 +3,7 @@
         "target": "es5",
         "module": "commonjs",
         "outDir": "meaningless_output",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }

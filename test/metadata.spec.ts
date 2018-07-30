@@ -15,31 +15,6 @@ class SampleClass {
     arg2: string;
 }
 
-class NoMetaClass {
-}
-@metadata.superClass(NoMetaClass)
-class OtherClass extends NoMetaClass {
-    @metadata("meta", "value")
-    static staticProperty;
-    
-    @metadata("meta", "value")
-    static staticMethod() { }
-
-    @metadata("meta", "value")
-    @metadata.type(SampleClass)
-    prop: SampleClass;
-
-    @metadata("meta", "value")
-    method() { }
-
-    @metadata("meta" , "value")
-    get accessor() {
-        return null;
-    }
-    set accessor(v) {
-    }
-}
-
 describe("reflector.metadata - class", () => {
     describe("#metadata.className('metadata.spec.SampleClass')", () => {
         it("should className is metadata.spec.SampleClass", () => {
@@ -70,6 +45,31 @@ describe("reflector.metadata - class", () => {
         })
     })
 })
+
+
+class NoMetaClass {
+}
+@metadata.superClass(NoMetaClass)
+class OtherClass extends NoMetaClass {
+    @metadata()
+    static staticProperty;
+    
+    @metadata()
+    static staticMethod() { }
+
+    @metadata.type(SampleClass)
+    prop: SampleClass;
+
+    @metadata()
+    method() { }
+
+    @metadata()
+    get accessor() {
+        return null;
+    }
+    set accessor(v) {
+    }
+}
 describe("reflector.metadata - static member", () => {
     describe("#OtherClass.staticProperty", () => {
         it("should staticProperty is static property", () => {
@@ -77,8 +77,7 @@ describe("reflector.metadata - static member", () => {
             assert.strictEqual(true, !!schema.staticProperties["staticProperty"]);
             assert.strictEqual("staticProperty", schema.staticProperties["staticProperty"].name);
             assert.strictEqual(undefined, schema.staticProperties["staticProperty"].type);
-            assert.strictEqual(true, schema.staticProperties["staticProperty"].isStatic);
-            assert.strictEqual(false, schema.staticProperties["staticProperty"].isMethod);
+            assert.strictEqual(undefined, schema.staticProperties["staticProperty"].isMethod);
         })
     })
     describe("#OtherClass.staticMethod", () => {
@@ -87,7 +86,6 @@ describe("reflector.metadata - static member", () => {
             assert.strictEqual(true, !!schema.staticProperties["staticMethod"]);
             assert.strictEqual("staticMethod", schema.staticProperties["staticMethod"].name);
             assert.strictEqual(undefined, schema.staticProperties["staticMethod"].type);
-            assert.strictEqual(true, schema.staticProperties["staticMethod"].isStatic);
             assert.strictEqual(true, schema.staticProperties["staticMethod"].isMethod);
         })
     })
@@ -100,8 +98,7 @@ describe("reflector.metadata - member", () => {
             assert.strictEqual(true, !!schema.properties["prop"]);
             assert.strictEqual("prop", schema.properties["prop"].name);
             assert.strictEqual("metadata.spec.SampleClass", schema.properties["prop"].type);
-            assert.strictEqual(false, schema.properties["prop"].isStatic);
-            assert.strictEqual(false, schema.properties["prop"].isMethod);
+            assert.strictEqual(undefined, schema.properties["prop"].isMethod);
         })
     })
     describe("#OtherClass.method", () => {
@@ -110,7 +107,6 @@ describe("reflector.metadata - member", () => {
             assert.strictEqual(true, !!schema.properties["method"]);
             assert.strictEqual("method", schema.properties["method"].name);
             assert.strictEqual(undefined, schema.properties["method"].type);
-            assert.strictEqual(false, schema.properties["method"].isStatic);
             assert.strictEqual(true, schema.properties["method"].isMethod);
         })
     })
@@ -120,8 +116,7 @@ describe("reflector.metadata - member", () => {
             assert.strictEqual(true, !!schema.properties["accessor"]);
             assert.strictEqual("accessor", schema.properties["accessor"].name);
             assert.strictEqual(undefined, schema.properties["accessor"].type);
-            assert.strictEqual(false, schema.properties["accessor"].isStatic);
-            assert.strictEqual(false, schema.properties["accessor"].isMethod);
+            assert.strictEqual(undefined, schema.properties["accessor"].isMethod);
         })
     })
 })
