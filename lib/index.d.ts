@@ -4,9 +4,8 @@ export interface IClass extends Function {
 export interface IPropertySchema {
     [key: string]: any;
     name: string;
-    isStatic: boolean;
-    isMethod: boolean;
     type?: string;
+    isMethod?: boolean;
 }
 export interface IClassSchema {
     [key: string]: any;
@@ -20,7 +19,7 @@ export interface IClassSchema {
     };
 }
 export interface IObjectSchema {
-    type: string;
+    type?: string;
     properties: {
         [key: string]: IPropertySchema;
     };
@@ -31,7 +30,7 @@ export interface IHookTypes {
     PROPERTY: string;
 }
 export interface IMetadataStatic {
-    (key: string, value?: any): Function;
+    (key?: string, value?: any): Function;
     className(value: string): Function;
     superClass(value: string | Function | IClass): Function;
     type(value: string | Function | IClass): Function;
@@ -42,7 +41,7 @@ export interface IReflectorUtil {
     getClassByName(className: string): IClass;
     getSuperClass(classObject: Function | IClass): IClass;
     getSuperClassName(classObject: Function | IClass): string;
-    newInstance(className: string | Function | IClass, ...args: any[]): any;
+    newInstance(className: string, ...args: any[]): any;
     getClassSchema(classObject: Function | IClass, declared?: boolean): IClassSchema;
     describe(obj: any, allMembers?: boolean): IObjectSchema;
     describeProperty(obj: any, propertyName: string, value: any): IPropertySchema;

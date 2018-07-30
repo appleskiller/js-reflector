@@ -1,5 +1,5 @@
 /**
-  * js-reflector v1.1.2
+  * js-reflector v1.1.5
   * (c) 2017-2018 Appleskiller
   * @license MIT
   */
@@ -177,52 +177,49 @@ function mergeSchema(schema, superSchema) {
     }
     return result;
 }
-function createNullValueSchema(propName, propertySchema, isStatic) {
+function createNullValueSchema(propName, propertySchema) {
     if (!propertySchema)
-        return { name: propName, type: NULLTYPE, isMethod: false, isStatic: isStatic };
+        return { name: propName, type: NULLTYPE, isMethod: false };
     var result = {};
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
     result.name = propName;
-    result.isMethod = !!(propertySchema && propertySchema.isMethod);
+    !!(propertySchema && propertySchema.isMethod) && (result.isMethod = true);
     result.type = propertySchema.type || NULLTYPE;
-    result.isStatic = isStatic;
     return result;
 }
-function createUndefinedValueSchema(propName, propertySchema, isStatic) {
+function createUndefinedValueSchema(propName, propertySchema) {
     if (!propertySchema)
-        return { name: propName, type: UNDEFINEDTYPE, isMethod: false, isStatic: isStatic };
+        return { name: propName, type: UNDEFINEDTYPE, isMethod: false };
     var result = {};
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
     result.name = propName;
-    result.isMethod = !!(propertySchema && propertySchema.isMethod);
+    !!(propertySchema && propertySchema.isMethod) && (result.isMethod = true);
     result.type = propertySchema.type || UNDEFINEDTYPE;
-    result.isStatic = isStatic;
     return result;
 }
-function createFunctionValueSchema(propName, propertySchema, isStatic) {
+function createFunctionValueSchema(propName, propertySchema) {
     if (!propertySchema)
-        return { name: propName, type: "Function", isMethod: false, isStatic: isStatic };
+        return { name: propName, type: "Function", isMethod: false };
     var result = {};
     for (var key in propertySchema) {
         result[key] = propertySchema[key];
     }
     result.name = propName;
-    result.isMethod = !!(propertySchema && propertySchema.isMethod);
+    !!(propertySchema && propertySchema.isMethod) && (result.isMethod = true);
     result.type = propertySchema.type || "Function";
-    result.isStatic = isStatic;
     return result;
 }
-function createObjectPropertySchema(propName, value, propertySchema, isStatic) {
+function createObjectPropertySchema(propName, value, propertySchema) {
     if (value === null)
-        return createNullValueSchema(propName, propertySchema, isStatic);
+        return createNullValueSchema(propName, propertySchema);
     else if (value === undefined)
-        return createUndefinedValueSchema(propName, propertySchema, isStatic);
+        return createUndefinedValueSchema(propName, propertySchema);
     else if (typeof value === "function")
-        return createFunctionValueSchema(propName, propertySchema, isStatic);
+        return createFunctionValueSchema(propName, propertySchema);
     var result = {};
     var key;
     if (propertySchema) {
@@ -234,9 +231,8 @@ function createObjectPropertySchema(propName, value, propertySchema, isStatic) {
     var classSchema = getOrCreateDeclaredClassSchema(classObject);
     mergeClassSchemaToPropertySchema(result, classSchema);
     result.name = propName;
-    result.isMethod = !!(propertySchema && propertySchema.isMethod);
+    !!(propertySchema && propertySchema.isMethod) && (result.isMethod = true);
     result.type = classSchema.className;
-    result.isStatic = isStatic;
     return result;
 }
 function createObjectSchema(schema) {
@@ -301,12 +297,10 @@ function getOrCreateDeclaredClassSchema(classObject) {
 function getOrCreatePropertySchema(classObject, propName, isMethod, isStatic) {
     var schema = getOrCreateClassSchema(classObject);
     var properties = isStatic ? schema.staticProperties : schema.properties;
-    if (!properties[propName])
-        properties[propName] = {
-            name: propName,
-            isStatic: isStatic,
-            isMethod: isMethod,
-        };
+    if (!properties[propName]) {
+        properties[propName] = { name: propName };
+        isMethod && (properties[propName].isMethod = true);
+    }
     return properties[propName];
 }
 function getMetadataValue(hookArray, value, classObject) {
@@ -318,15 +312,15 @@ function getMetadataValue(hookArray, value, classObject) {
     }
     return value;
 }
-function classDecorator(key, classObject, value) {
+function classDecorator(classObject, key, value) {
     var schema = getOrCreateClassSchema(classObject);
-    schema[key] = getMetadataValue(hooks.classHook[key], value, classObject);
+    key && (schema[key] = getMetadataValue(hooks.classHook[key], value, classObject));
 }
-function staticPropertyDecorator(key, classObject, memberName, isMethod, value) {
+function staticPropertyDecorator(classObject, memberName, isMethod, key, value) {
     var schema = getOrCreatePropertySchema(classObject, memberName, isMethod, true);
-    schema[key] = getMetadataValue(hooks.staticPropertyHook[key], value, classObject);
+    key && (schema[key] = getMetadataValue(hooks.staticPropertyHook[key], value, classObject));
 }
-function propertyDecorator(key, classProto, memberName, isMethod, value) {
+function propertyDecorator(classProto, memberName, isMethod, key, value) {
     var classObject = classProto.constructor;
     var schema = getOrCreatePropertySchema(classProto.constructor, memberName, isMethod, false);
     schema[key] = getMetadataValue(hooks.propertyHook[key], value, classObject);
@@ -335,14 +329,14 @@ exports.metadata = function (key, value) {
     function internalDecorator(target, targetKey, desc) {
         if (isClass(target)) {
             if (!targetKey) {
-                classDecorator(key, target, value);
+                classDecorator(target, key, value);
             }
             else {
-                staticPropertyDecorator(key, target, targetKey, isMethodDesc(desc), value);
+                staticPropertyDecorator(target, targetKey, isMethodDesc(desc), key, value);
             }
         }
         else if (isDefined(targetKey) && isObject(target)) {
-            propertyDecorator(key, target, targetKey, isMethodDesc(desc), value);
+            propertyDecorator(target, targetKey, isMethodDesc(desc), key, value);
         }
         else {
             throw new TypeError();
@@ -448,7 +442,7 @@ exports.util = {
         for (var key in obj) {
             value = obj[key];
             if (allMembers || propertiesSchema[key]) {
-                result.properties[key] = createObjectPropertySchema(key, value, propertiesSchema[key], isClassObject);
+                result.properties[key] = createObjectPropertySchema(key, value, propertiesSchema[key]);
             }
         }
         return result;
@@ -461,6 +455,6 @@ exports.util = {
         var classObject = isClassObject ? obj : obj.constructor;
         var classSchema = exports.util.getClassSchema(classObject, true);
         var propertiesSchema = isClassObject ? classSchema.staticProperties : classSchema.properties;
-        return createObjectPropertySchema(propertyName, value, propertiesSchema[propertyName], isClassObject);
+        return createObjectPropertySchema(propertyName, value, propertiesSchema[propertyName]);
     }
 };
