@@ -1,8 +1,6 @@
 // Karma configuration
 // Generated on Mon Nov 13 2017 21:56:03 GMT+0800 (中国标准时间)
 
-var karma_sauceLabs = require("./karma.sauceLabs.json");
-
 module.exports = function (config) {
     config.set({
 
@@ -25,7 +23,6 @@ module.exports = function (config) {
             'test/**/*.ts'
         ],
 
-
         // list of files to exclude
         exclude: [
         ],
@@ -36,8 +33,6 @@ module.exports = function (config) {
             'src/**/*.ts': ["karma-typescript"],
             'test/**/*.ts': ["karma-typescript"]
         },
-        // from file karma.sauceLabs.json
-        sauceLabs: karma_sauceLabs,
         customLaunchers: {
             sl_chrome: {
                 base: 'SauceLabs',
@@ -49,7 +44,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'karma-typescript', 'saucelabs'],
+        reporters: ['progress', 'karma-typescript'],
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         browsers: ['Chrome'],

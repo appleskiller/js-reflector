@@ -245,7 +245,24 @@ $ npm build
 $ npm test
 ```
 
-## Using karma-sauceLabs-launcher
+# Using in your Typescript project
+
+You need set below options in tsconfig.json file:
+
+```json
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    }
+}
+```
+
+# More practices
+
+**This lib is very useful reflecting at runtime. However, [typescript-json-schema](https://github.com/YousefED/typescript-json-schema) is the best choice, if you need to generate fully and statically class schema.**
+
+<!-- ## Using karma-sauceLabs-launcher
 For run the tests across many browsers and platforms on Sauce Labs, you must make file 'karma.sauceLabs.json' in the project:
 ```json
 {
@@ -279,4 +296,4 @@ module.exports = function(config) {
 
 [all browser/platform combos](https://saucelabs.com/platforms)
 
-[karma-sauce-launcher](https://www.npmjs.com/package/karma-sauce-launcher)
+[karma-sauce-launcher](https://www.npmjs.com/package/karma-sauce-launcher) -->

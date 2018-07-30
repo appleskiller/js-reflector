@@ -53,3 +53,4 @@ meaningless_output/
 coverage/
 node_modules/
 karma.sauceLabs.json
+/package-lock.json
