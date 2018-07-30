@@ -24,7 +24,7 @@ describe("reflector.metadata - class", () => {
     describe("#metadata.superClass()", () => {
         it("should superClass of SampleClass is Object", () => {
             assert.strictEqual(Object, util.getSuperClass(SampleClass))
-        })
+        }) 
         it("should superClass name of SampleClass is 'Object'", () => {
             assert.strictEqual("Object", util.getSuperClassName(SampleClass))
         })
